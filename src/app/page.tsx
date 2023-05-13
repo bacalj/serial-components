@@ -1,4 +1,4 @@
-import SerialHost from '../serial-components/serial-host'
+import SerialHost from '../components/serial-host'
 
 export default function Home() {
   return (
