@@ -1,8 +1,18 @@
-import { useState } from 'react'
+import { useState, useRef } from 'react'
 
 export function useSerial() {
-  const [connected, setConnected] = useState(false)
-  const [value, setValue] = useState(0)
+  const [isStreaming, setIsStreaming] = useState(false);
+  const [val, setVal] = useState(0);
+  const interval = useRef<any>(null);
 
-  return [value, connected]
+  const start = () => {
+    if (isStreaming) return;
+    setIsStreaming(true);
+    interval.current = setInterval(() => {
+      setVal((timeElapsed) => timeElapsed + 1);
+    }, 1000);
+  };
+
+  return { isStreaming, val, start };
+
 }

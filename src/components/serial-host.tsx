@@ -5,17 +5,8 @@ import SerialReadout from './serial-readout'
 import { useSerial } from '../useSerial';
 
 export default function SerialHost() {
-  const [isStreaming, setIsStreaming] = useState(false);
-  const [val, setVal] = useState(0);
-  const interval = useRef<any>(null);
 
-  const start = () => {
-    if (isStreaming) return;
-    setIsStreaming(true);
-    interval.current = setInterval(() => {
-      setVal((timeElapsed) => timeElapsed + 1);
-    }, 1000);
-  };
+  const { isStreaming, start, val } = useSerial();
 
   return (
     <div>
