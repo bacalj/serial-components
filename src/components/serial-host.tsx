@@ -5,13 +5,13 @@ import SerialReadout from './serial-readout'
 import { useSerial } from '../useSerial';
 
 export default function SerialHost() {
-
-  const { isStreaming, start, val } = useSerial();
+  console.log("| render SerialHost")
+  const { isStreaming, val, openStream, isConnected } = useSerial();
 
   return (
     <div>
-      <button className="m-3" onClick={start}>
-        { isStreaming ? "✅ Connected" : "🔌 Click To Connect" }
+      <button className="m-3" onClick={openStream}>
+        { isStreaming && isConnected ? "✅ Connected" : "🔌 Click To Connect" }
       </button>
       <SerialReadout sc={val} />
     </div>
