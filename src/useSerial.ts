@@ -66,13 +66,9 @@ export function useSerial() {
   const handleUtterance = (utterance: string) => {
     localBuffer.current += utterance;
     if (localBuffer.current.includes('\n')) {
-      const lines = localBuffer.current.split('\n');
-      console.log("| lines", lines);
-      console.log("| localBuffer.current", localBuffer.current);
-      // const lastLine = lines[lines.length - 2];
-      // const lastLineSplit = lastLine.split(':');
-      // const lastLineValue = lastLineSplit[lastLineSplit.length - 1];
-      // setVal(lastLineValue);
+      const keyedChunk = localBuffer.current.split('\r\n')[0];
+      const num = /(d)(\d+)/.exec(keyedChunk);
+      num && setVal(Number(num[2]));
       localBuffer.current = '';
     }
   }
