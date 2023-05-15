@@ -21,7 +21,7 @@ export function useSerial() {
     try {
       port.current = await S.requestPort();
       deviceInfo.current = await port.current.getInfo();
-    } catch (error){
+    } catch (error) {
       console.error("| error in requestAndSetPort", error)
     }
   };
@@ -59,7 +59,7 @@ export function useSerial() {
     try {
       await requestAndSetPort();
       await openPort();
-      if(!hasPort()) return;
+      if (!hasPort()) return;
 
       setUpWriter();
       setUpReader();

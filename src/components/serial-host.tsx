@@ -2,21 +2,17 @@
 
 import { useSerial } from '../useSerial';
 
+const buttonClasses = "cursor-pointer mr-3 p-3 hover:bg-indigo-600 hover:text-white rounded-md"
+
 export default function SerialHost() {
-  const { isStreaming, val, openStream, isConnected } = useSerial();
+  const { isStreaming, val, openStream } = useSerial();
 
   return (
-    <div>
-      <button
-        className="m-3 bg-indigo-300 px-6 py-2 rounded-md"
-        onClick={openStream}
-      >
-        { isStreaming && isConnected
-          ? "✅ Connected"
-          : "🔌 Click To Connect"
-        }
+    <div className="flex">
+      <button className={buttonClasses} onClick={openStream}>
+        {isStreaming ? "✅ Connected" : "🔌 Connect"}
       </button>
-      <div className="m-3 text-xl">
+      <div className='p-3'>
         { val }
       </div>
     </div>
