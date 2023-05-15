@@ -1,5 +1,6 @@
 'use client'
 
+import { type } from 'os';
 import { useState, useRef } from 'react'
 
 const S = window.navigator.serial;
@@ -21,16 +22,14 @@ export function useSerial() {
   const port = useRef<any>(null);
 
   S.addEventListener('connect', (e) => onConnect());
-  S.addEventListener('disconnect', (e) => onDisconnect);
+  S.addEventListener('disconnect', (e) => onDisconnect());
 
   const onConnect = () => {
     setIsConnected(true);
-    console.log('| connected');
   };
 
   const onDisconnect = () => {
     setIsConnected(false);
-    console.log('| disconnected');
   };
 
   const requestAndSetPort = async () => {
@@ -62,11 +61,23 @@ export function useSerial() {
   const setUpReader = () => {
     port.current.readable.pipeTo(TD.writable);
     reader.current = TD.readable.getReader();
-    console.log("| reader set up", reader.current)
   };
 
+  const handleUtterance = (utterance: string) => {
+    localBuffer.current += utterance;
+    if (localBuffer.current.includes('\n')) {
+      const lines = localBuffer.current.split('\n');
+      console.log("| lines", lines);
+      console.log("| localBuffer.current", localBuffer.current);
+      // const lastLine = lines[lines.length - 2];
+      // const lastLineSplit = lastLine.split(':');
+      // const lastLineValue = lastLineSplit[lastLineSplit.length - 1];
+      // setVal(lastLineValue);
+      localBuffer.current = '';
+    }
+  }
+
   const openStream = async () => {
-    console.log("| openStream!")
     try {
       await requestAndSetPort();
       await openPort();
@@ -76,13 +87,10 @@ export function useSerial() {
       setUpReader();
       setIsStreaming(true);
 
-      console.log("| port.current.readable ?", port.current.readable)
       while (port.current.readable) {
-        //console.log("pp port.current.readable", port.current.readable)
         const { value, done } = await reader.current.read();
-        isFinite(value) && setVal(value);
+        handleUtterance(value);
         if (done) break;
-
       }
     }
     catch (error) {
