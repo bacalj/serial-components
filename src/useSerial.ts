@@ -1,15 +1,8 @@
-'use client'
-
-import { type } from 'os';
 import { useState, useRef } from 'react'
 
 const S = window.navigator.serial;
 const TE = new TextEncoderStream();
 const TD = new TextDecoderStream();
-
-console.log("| S", S)
-
-// https://makecode.microbit.org/_ig777L3CYFRV
 
 export function useSerial() {
   const [isStreaming, setIsStreaming] = useState(false);
@@ -21,19 +14,10 @@ export function useSerial() {
   const reader = useRef<any>(null);
   const port = useRef<any>(null);
 
-  S.addEventListener('connect', (e) => onConnect());
-  S.addEventListener('disconnect', (e) => onDisconnect());
-
-  const onConnect = () => {
-    setIsConnected(true);
-  };
-
-  const onDisconnect = () => {
-    setIsConnected(false);
-  };
+  S.addEventListener('connect', (e) => setIsConnected(true));
+  S.addEventListener('disconnect', (e) => setIsConnected(false));
 
   const requestAndSetPort = async () => {
-    console.log("| requestAndSetPort!")
     try {
       port.current = await S.requestPort();
       deviceInfo.current = await port.current.getInfo();
@@ -47,7 +31,6 @@ export function useSerial() {
   };
 
   const openPort = async () => {
-    console.log("| openPort!")
     await port.current.open({ baudRate: 9600 })
       .catch((e: any) => console.error("| error on open port: ", e));
   };
@@ -55,7 +38,6 @@ export function useSerial() {
   const setUpWriter = () => {
     TE.readable.pipeTo(port.current.writable);
     writer.current = TE.writable.getWriter();
-    console.log("| writer set up", writer.current)
   };
 
   const setUpReader = () => {
@@ -89,10 +71,12 @@ export function useSerial() {
         if (done) break;
       }
     }
+
     catch (error) {
       setIsStreaming(false);
       console.error("error in handleSteram", error)
     }
+
     finally {
       setIsStreaming(false);
       await port.current.close();

@@ -1,19 +1,24 @@
 'use client'
 
-import React, { useRef, useState } from 'react'
-import SerialReadout from './serial-readout'
 import { useSerial } from '../useSerial';
 
 export default function SerialHost() {
-  //console.log("| render SerialHost")
   const { isStreaming, val, openStream, isConnected } = useSerial();
 
   return (
     <div>
-      <button className="m-3" onClick={openStream}>
-        { isStreaming && isConnected ? "✅ Connected" : "🔌 Click To Connect" }
-      </button><br/>
-      { val }
+      <button
+        className="m-3 bg-indigo-300 px-6 py-2 rounded-md"
+        onClick={openStream}
+      >
+        { isStreaming && isConnected
+          ? "✅ Connected"
+          : "🔌 Click To Connect"
+        }
+      </button>
+      <div className="m-3 text-xl">
+        { val }
+      </div>
     </div>
   );
 }
